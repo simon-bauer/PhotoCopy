@@ -6,7 +6,16 @@
         xmlns:local="clr-namespace:PhotoCopy"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Source folder</TextBlock>
+            <TextBox Width="200"></TextBox>
+            <Button>...</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Target folder</TextBlock>
+            <TextBox Width="200"></TextBox>
+            <Button>...</Button>
+        </StackPanel>
+    </StackPanel>
 </Window>

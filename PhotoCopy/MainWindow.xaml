@@ -1,0 +1,25 @@
+﻿<Window x:Class="PhotoCopy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PhotoCopy"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="400">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Margin="10">Source folder</TextBlock>
+            <TextBox Width="200" Margin="10"></TextBox>
+            <Button Width="20" Margin="10">...</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Margin="10">Target folder</TextBlock>
+            <TextBox Width="200" Margin="10"></TextBox>
+            <Button Width="20" Margin="10">...</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Width="100" Margin="10">Scan</Button>
+            <Button Width="100" Margin="10">Copy</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

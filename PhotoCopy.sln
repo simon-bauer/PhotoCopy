@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoCopy", "PhotoCopy\PhotoCopy.csproj", "{690448CD-B180-454D-9C26-FA3E75FD704C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoCopyTests", "PhotoCopyTests\PhotoCopyTests.csproj", "{137C26F8-5FF9-415F-B8EF-FAC3AFE14511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoCopySpec", "PhotoCopyTests\PhotoCopySpec.csproj", "{137C26F8-5FF9-415F-B8EF-FAC3AFE14511}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

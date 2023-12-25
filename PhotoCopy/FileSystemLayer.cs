@@ -9,8 +9,8 @@ using System.Collections.Generic;
 
 namespace PhotoCopy
 {
-    public readonly record struct FileSystemSubTree(string Root, ImmutableDictionary<string, LightWeightFile> Files);
     public readonly record struct LightWeightFile(DateOnly Date, string Sha256);
+    public readonly record struct FileSystemSubTree(string Root, ImmutableDictionary<string, LightWeightFile> Files);
     public static class Extensions
     {
         public static string FileHash(this SHA256 sha256, string path)
@@ -22,7 +22,6 @@ namespace PhotoCopy
             }
         }
     }
-
     public static class FileSystemLayer
     {
         public static DateOnly ExtractDate(byte[] bytes)
@@ -41,18 +40,16 @@ namespace PhotoCopy
                 return new DateOnly(1970, 1, 1);
             }
         }
-
         public static DateOnly ExtractDate(string path)
         {
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new(path, FileMode.Open, FileAccess.Read))
             {
-                using (BinaryReader br = new BinaryReader(fs))
+                using (BinaryReader br = new(fs))
                 {
                     return ExtractDate(br.ReadBytes(400));
                 }
             }
         }
-
         public static FileSystemSubTree CreateFileSystemSubTree(string root)
         {
             using (SHA256 mySHA256 = SHA256.Create())

@@ -48,7 +48,7 @@ namespace PhotoCopySpec
             Assert.AreEqual(new DateOnly(2020, 7, 3), date);
         }
         [TestMethod]
-        public void TestMethod4()
+        public void Extract_beginning_of_jpeg_file_as_hexstring()
         {
             var bytes = File.ReadAllBytes(@"C:\temp\1\148___07\IMG_8188.JPG");
             var str = Convert.ToHexString(bytes);

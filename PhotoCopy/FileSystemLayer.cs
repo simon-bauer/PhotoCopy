@@ -23,7 +23,7 @@ namespace PhotoCopy
         }
     }
 
-    public static class Abc
+    public static class FileSystemLayer
     {
         public static DateOnly ExtractDate(byte[] bytes)
         {
@@ -32,9 +32,9 @@ namespace PhotoCopy
             var m = Regex.Match(s, @"(\d\d\d\d):(\d\d):(\d\d)");
             try
             {
-                return new DateOnly(Int32.Parse(m.Groups[1].Value),
-                    Int32.Parse(m.Groups[2].Value),
-                    Int32.Parse(m.Groups[3].Value));
+                return new DateOnly(int.Parse(m.Groups[1].Value),
+                    int.Parse(m.Groups[2].Value),
+                    int.Parse(m.Groups[3].Value));
             }
             catch
             {
@@ -53,7 +53,7 @@ namespace PhotoCopy
             }
         }
 
-        public static FileSystemSubTree RenameMe(string root)
+        public static FileSystemSubTree CreateFileSystemSubTree(string root)
         {
             using (SHA256 mySHA256 = SHA256.Create())
             {
@@ -64,7 +64,7 @@ namespace PhotoCopy
                     Select(f => new KeyValuePair<string, LightWeightFile>(f,
                         new LightWeightFile
                         {
-                            Date = Abc.ExtractDate(f),
+                            Date = ExtractDate(f),
                             Sha256 = mySHA256.FileHash(f)
                         })).
                     ToImmutableDictionary()

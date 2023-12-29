@@ -1,27 +1,39 @@
 using System.Collections.Immutable;
 using System.Text.Json;
 using PhotoCopy;
-using static PhotoCopy.FileSystemLayer;
+using static PhotoCopy.FileSystemTools;
 
 namespace PhotoCopySpec
 {
     [TestClass]
-    public class FileSystemLayerSpec
+    public class FileSystemToolsSpec
     {
         public static FileSystemSubTree CreateTestFileSystemSubTree()
         {
+            const string root = @"C:\temp";
             return new FileSystemSubTree
             {
-                Root = @"C:\temp",
-                Files = new Dictionary<string, LightWeightFile> { { @"test\1", new LightWeightFile(new DateOnly(), "abcdef0123456789") } }.
-                    ToImmutableDictionary()
+                Root = root,
+                Files = new Dictionary<string, LightWeightFile>
+                { 
+                    { root + @"1.txt", new LightWeightFile(new DateOnly(), "abcdef0123456789") }, 
+                    { root + @"sub/3.jpeg", new LightWeightFile(new DateOnly(2010,7,30), "a879b8789398c87f") } 
+                }.ToImmutableDictionary()
             };
         }
-        [TestMethod]
-        public void A_FileSystemSubTree_can_be_serialized_as_JSON()
+        public static void AssertAreEquivalent(FileSystemSubTree a, FileSystemSubTree b)
         {
-            var files = CreateTestFileSystemSubTree();
-            Console.WriteLine(JsonSerializer.Serialize(files, new JsonSerializerOptions { WriteIndented = true }));
+            Assert.AreEqual(a.Root, b.Root);
+            CollectionAssert.AreEquivalent(a.Files, b.Files);
+        }
+        [TestMethod]
+        public void A_FileSystemSubTree_can_be_serialized_and_deserialized_to_and_from_JSON()
+        {
+            FileSystemSubTree files = CreateTestFileSystemSubTree();
+            string jsonString = JsonSerializer.Serialize(files, new JsonSerializerOptions { WriteIndented = true });
+            Console.WriteLine(jsonString);
+            FileSystemSubTree deserializedFiles = JsonSerializer.Deserialize<FileSystemSubTree>(jsonString);
+            AssertAreEquivalent(files, deserializedFiles);
         }
 
         [TestMethod]

@@ -22,7 +22,7 @@ namespace PhotoCopy
             }
         }
     }
-    public static class FileSystemLayer
+    public static class FileSystemTools
     {
         public static DateOnly ExtractDate(byte[] bytes)
         {

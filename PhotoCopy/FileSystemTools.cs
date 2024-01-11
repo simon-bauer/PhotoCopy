@@ -9,8 +9,6 @@ using System.Collections.Generic;
 
 namespace PhotoCopy
 {
-    public readonly record struct LightWeightFile(DateOnly Date, string Sha256);
-    public readonly record struct FileSystemSubTree(string Root, ImmutableDictionary<string, LightWeightFile> Files);
     public static class Extensions
     {
         public static string FileHash(this SHA256 sha256, string path)
@@ -50,22 +48,17 @@ namespace PhotoCopy
                 }
             }
         }
-        public static FileSystemSubTree CreateFileSystemSubTree(string root)
+        public static ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> CreateFileCollection(string root)
         {
             using (SHA256 mySHA256 = SHA256.Create())
             {
-                return new FileSystemSubTree
-                {
-                    Root = root,
-                    Files = Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories).
-                    Select(f => new KeyValuePair<string, LightWeightFile>(f,
-                        new LightWeightFile
-                        {
-                            Date = ExtractDate(f),
-                            Sha256 = mySHA256.FileHash(f)
-                        })).
-                    ToImmutableDictionary()
-                };
+                return Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories).
+                    Select(f => new KeyValuePair<AbsolutePath, (DateOnly, Sha256)>
+                    (
+                        f,
+                        (ExtractDate(f), new Sha256(mySHA256.FileHash(f)))
+                    )).
+                    ToImmutableDictionary();
             }
         }
     }

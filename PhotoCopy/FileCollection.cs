@@ -16,6 +16,11 @@ namespace PhotoCopy
         public static implicit operator AbsolutePath(string s) => new AbsolutePath(s);
         public static implicit operator string(AbsolutePath p) => p.Value;
     }
+    public readonly record struct RelativePath(string Value)
+    {
+        public static implicit operator RelativePath(string s) => new RelativePath(s);
+        public static implicit operator string(RelativePath p) => p.Value;
+    }
     public class FileCollection
     {
         public static string Serialize(ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> fileCollection)

@@ -22,12 +22,6 @@ namespace PhotoCopy
     }
     public static class FileSystemTools
     {
-        public static byte[] GenerateTestFileContent(DateOnly date)
-        {
-            byte[] dateAsBytes = Encoding.ASCII.GetBytes($"{date.Year:D4}:{date.Month:D2}:{date.Day:D2}");
-            byte[] guid = Guid.NewGuid().ToByteArray();
-            return dateAsBytes.Concat(guid).ToArray();
-        }
         public static DateOnly ExtractDate(byte[] bytes)
         {
             byte[] digitsBetween0And9AndColons = bytes.Where(b => b >= 48 && b <= 58).ToArray();

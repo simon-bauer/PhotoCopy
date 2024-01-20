@@ -20,6 +20,10 @@ namespace PhotoCopySpec
         {
             return Path.Combine(Path.GetTempPath(), "PhotoCopy_TestFiles");
         }
+        public static string AbsoluteTestPath(RelativePath relativePath)
+        {
+            return Path.Combine(TestFilesRoot(), relativePath);
+        }
         /// <summary>
         /// Delete recursively TestFilesRoot first and then create given files.
         /// </summary>

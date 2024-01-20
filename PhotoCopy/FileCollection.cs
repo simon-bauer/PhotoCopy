@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace PhotoCopy
 {
@@ -11,14 +12,31 @@ namespace PhotoCopy
         public Sha256(byte[] b) : this(Convert.ToHexString(b))
         { }
     }
+    public static class PathHelper
+    {
+        public static string NormalizeSlashes(string s)
+        {
+            return s.Replace("\\", "/");
+        }
+        public static string CheckForAbsolutePath(string path)
+        {
+            if (Path.IsPathFullyQualified(path))
+            {
+                return path;
+            }
+            throw new ArgumentException($"Give path {path} is not an absolute path");
+        }
+    }
     public readonly record struct AbsolutePath(string Value)
     {
-        public static implicit operator AbsolutePath(string s) => new AbsolutePath(s);
+        public static implicit operator AbsolutePath(string s) => 
+            new AbsolutePath(PathHelper.NormalizeSlashes(PathHelper.CheckForAbsolutePath(s)));
         public static implicit operator string(AbsolutePath p) => p.Value;
     }
     public readonly record struct RelativePath(string Value)
     {
-        public static implicit operator RelativePath(string s) => new RelativePath(s);
+        public static implicit operator RelativePath(string s) => 
+            new RelativePath(PathHelper.NormalizeSlashes(s));
         public static implicit operator string(RelativePath p) => p.Value;
     }
     public class FileCollection

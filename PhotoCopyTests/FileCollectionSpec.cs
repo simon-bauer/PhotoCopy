@@ -22,5 +22,27 @@ namespace PhotoCopySpec
             Console.WriteLine(serialization);
             CollectionAssert.AreEquivalent(fileCollection, deserializedFileCollection);
         }
+        [TestMethod]
+        public void An_absolute_path_created_by_implicit_constructor_normalizes_all_slashed_to_forward_slashes()
+        {
+            AbsolutePath p = "C:\\abc\\def.txt";
+            Assert.AreEqual("C:/abc/def.txt", (string)p);
+        }
+        [TestMethod]
+        public void An_absolute_path_created_by_implicit_constructor_throws_if_given_path_is_not_absolute()
+        {
+            Assert.ThrowsException<ArgumentException>(() => (AbsolutePath)"abc\\def.txt");
+        }
+        [TestMethod]
+        public void An_relative_path_created_by_implicit_constructor_normalizes_all_slashed_to_forward_slashes()
+        {
+            RelativePath p = "abc\\def.txt";
+            Assert.AreEqual("abc/def.txt", (string)p);
+        }
+        [TestMethod]
+        public void A_relative_path_created_by_implicit_constructor_throws_if_given_path_is_not_relative()
+        {
+            Assert.ThrowsException<ArgumentException>(() => (RelativePath)"C:\\abc\\def.txt");
+        }
     }
 }

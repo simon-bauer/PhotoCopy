@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 namespace PhotoCopySpec
 {
     [TestClass]
-    public class FileSystemTestHelperSpec
+    public class TestFilesSpec
     {
         [TestMethod]
         public void A_test_file_contains_the_input_date_similar_as_media_files()
@@ -28,13 +28,12 @@ namespace PhotoCopySpec
         [TestMethod]
         public void Temporary_test_files_can_be_created_and_deleted()
         {
-            CreateTestFiles(new List<(RelativePath, DateOnly)>
+            using TestFiles testFiles = new TestFiles(new List<(RelativePath, DateOnly)>
             {
                     ("subdir/file1.jpg", new DateOnly(2020, 3, 14)),
                     ("subdir2/file3.jpg", new DateOnly(2020, 3, 14)),
                     ("otherSubDir/file2.mp4", new DateOnly(2020, 3, 15))
             }.ToImmutableList());
-            DeleteTestFiles();
         }
     }
 }

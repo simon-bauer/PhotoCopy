@@ -24,7 +24,15 @@ namespace PhotoCopy
             {
                 return path;
             }
-            throw new ArgumentException($"Give path {path} is not an absolute path");
+            throw new ArgumentException($"Given path {path} is not an absolute path");
+        }
+        public static string CheckForRelativePath(string path)
+        {
+            if (!Path.IsPathFullyQualified(path))
+            {
+                return path;
+            }
+            throw new ArgumentException($"Given path {path} is not a relative path");
         }
     }
     public readonly record struct AbsolutePath(string Value)
@@ -36,7 +44,7 @@ namespace PhotoCopy
     public readonly record struct RelativePath(string Value)
     {
         public static implicit operator RelativePath(string s) => 
-            new RelativePath(PathHelper.NormalizeSlashes(s));
+            new RelativePath(PathHelper.NormalizeSlashes(PathHelper.CheckForRelativePath(s)));
         public static implicit operator string(RelativePath p) => p.Value;
     }
     public class FileCollection

@@ -1,5 +1,5 @@
 ﻿using PhotoCopy;
-using static PhotoCopySpec.FileSystemTestHelper;
+using static PhotoCopySpec.TestFiles;
 using static PhotoCopy.FileSystemTools;
 using System.Collections.Immutable;
 

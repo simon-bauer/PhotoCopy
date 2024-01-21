@@ -1,6 +1,6 @@
 using static PhotoCopy.FileSystemTools;
 using static PhotoCopy.FileCollection;
-using static PhotoCopySpec.FileSystemTestHelper;
+using static PhotoCopySpec.TestFiles;
 using PhotoCopy;
 using System.Collections.Immutable;
 

@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace PhotoCopySpec
 {
-    public class FileSystemTestHelper
+    public class TestFiles : IDisposable
     {
+        public TestFiles(ImmutableList<(RelativePath, DateOnly)> files)
+        {
+        }
+        public void Dispose() 
+        {
+        }
         public static byte[] GenerateTestFileContent(DateOnly date)
         {
             byte[] dateAsBytes = Encoding.ASCII.GetBytes($"{date.Year:D4}:{date.Month:D2}:{date.Day:D2}");

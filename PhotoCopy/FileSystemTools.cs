@@ -20,6 +20,10 @@ namespace PhotoCopy
             }
         }
     }
+    public class CopyFeedback
+    { }
+    public class Success : CopyFeedback
+    { }
     public static class FileSystemTools
     {
         public static DateOnly ExtractDate(byte[] bytes)
@@ -60,6 +64,11 @@ namespace PhotoCopy
                     )).
                     ToImmutableDictionary();
             }
+        }
+        public static CopyFeedback MyCopy(AbsolutePath source, AbsolutePath target)
+        {
+            File.Copy(source, target);
+            return new Success();
         }
     }
 

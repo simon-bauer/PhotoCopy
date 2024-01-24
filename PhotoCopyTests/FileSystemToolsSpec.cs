@@ -45,5 +45,23 @@ namespace PhotoCopySpec
             DateOnly d = ExtractDate(@"C:\temp\1\148___07\IMG_8188.JPG");
             Console.WriteLine(d);
         }
+        [TestMethod, TestCategory("Integration")]
+        public void RenameMe()
+        {
+            using TestFiles testFiles = new TestFiles(new List<(RelativePath, DateOnly)>
+            {
+                ("file.jpg", new DateOnly(2021, 1, 12)),
+            }.ToImmutableList());
+
+            CopyFeedback feedback = MyCopy(testFiles.AbsolutePath("file.jpg"), testFiles.AbsolutePath("file_copy.jpg"));
+
+            Assert.IsInstanceOfType(feedback, typeof(Success));
+            ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> files = CreateFileCollection(testFiles.Root);
+            Assert.AreEqual(2, files.Count);
+            Assert.AreEqual(
+                files[testFiles.AbsolutePath("file.jpg")].Item2,
+                files[testFiles.AbsolutePath("file_copy.jpg")].Item2
+            );
+        }
     }
 }

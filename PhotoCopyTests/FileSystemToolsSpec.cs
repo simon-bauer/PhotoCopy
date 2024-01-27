@@ -46,14 +46,14 @@ namespace PhotoCopySpec
             Console.WriteLine(d);
         }
         [TestMethod, TestCategory("Integration")]
-        public void RenameMe()
+        public void RobustCopy_copies_file_from_source_path_to_target_path()
         {
             using TestFiles testFiles = new TestFiles(new List<(RelativePath, DateOnly)>
             {
-                ("file.jpg", new DateOnly(2021, 1, 12)),
+                ("file.jpg", new ()),
             }.ToImmutableList());
 
-            CopyFeedback feedback = MyCopy(testFiles.AbsolutePath("file.jpg"), testFiles.AbsolutePath("file_copy.jpg"));
+            CopyFeedback feedback = RobustCopy(testFiles.AbsolutePath("file.jpg"), testFiles.AbsolutePath("file_copy.jpg"));
 
             Assert.IsInstanceOfType(feedback, typeof(Success));
             ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> files = CreateFileCollection(testFiles.Root);
@@ -62,6 +62,21 @@ namespace PhotoCopySpec
                 files[testFiles.AbsolutePath("file.jpg")].Item2,
                 files[testFiles.AbsolutePath("file_copy.jpg")].Item2
             );
+        }
+        [TestMethod, TestCategory("Integration")]
+        public void RobustCopy_copies_to_different_path_if_target_path_does_already_exist()
+        {
+            using TestFiles testFiles = new TestFiles(new List<(RelativePath, DateOnly)>
+            {
+                ("file.jpg", new ()),
+                ("other_file.jpg", new ()),
+            }.ToImmutableList());
+
+            CopyFeedback feedback = RobustCopy(testFiles.AbsolutePath("file.jpg"), testFiles.AbsolutePath("other_file.jpg"));
+
+            Assert.IsInstanceOfType(feedback, typeof(Success));
+            ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> files = CreateFileCollection(testFiles.Root);
+            Assert.AreEqual(3, files.Count);
         }
     }
 }

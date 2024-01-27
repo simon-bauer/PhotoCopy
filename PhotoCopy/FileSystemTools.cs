@@ -65,7 +65,7 @@ namespace PhotoCopy
                     ToImmutableDictionary();
             }
         }
-        public static CopyFeedback MyCopy(AbsolutePath source, AbsolutePath target)
+        public static CopyFeedback RobustCopy(AbsolutePath source, AbsolutePath target)
         {
             File.Copy(source, target);
             return new Success();

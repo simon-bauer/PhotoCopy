@@ -20,10 +20,10 @@ namespace PhotoCopy
             }
         }
     }
-    public class CopyFeedback
-    { }
-    public class Success : CopyFeedback
-    { }
+    public record class CopyFeedback(AbsolutePath Source, AbsolutePath Target);
+    public record class Success(AbsolutePath Source, AbsolutePath Target) : CopyFeedback(Source, Target);
+    public record class TargetExist(AbsolutePath Source, AbsolutePath Target, AbsolutePath AlternativeTarget) : CopyFeedback(Source, Target);
+    public record class Failed(AbsolutePath Source, AbsolutePath Target, Exception Exception) : CopyFeedback(Source, Target);
     public static class FileSystemTools
     {
         public static DateOnly ExtractDate(byte[] bytes)
@@ -67,9 +67,29 @@ namespace PhotoCopy
         }
         public static CopyFeedback RobustCopy(AbsolutePath source, AbsolutePath target)
         {
-            File.Copy(source, target);
-            return new Success();
+            try
+            {
+                if (File.Exists(target))
+                {
+                    AbsolutePath alternativeTarget =
+                        Path.Combine(
+                            Path.GetDirectoryName(target),
+                            Path.GetFileNameWithoutExtension(target) +
+                                Guid.NewGuid().ToString() +
+                                Path.GetExtension(target));
+                    File.Copy(source, alternativeTarget);
+                    return new TargetExist(source, target, alternativeTarget);
+                }
+                else
+                {
+                    File.Copy(source, target);
+                    return new Success(source, target);
+                }
+            }
+            catch (Exception exception) 
+            {
+                return new Failed(source, target, exception);
+            }
         }
     }
-
 }

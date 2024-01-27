@@ -44,5 +44,37 @@ namespace PhotoCopySpec
         {
             Assert.ThrowsException<ArgumentException>(() => (RelativePath)"C:\\abc\\def.txt");
         }
+        [TestMethod]
+        public void Files_to_copy_can_be_computed_from_set_of_source_and_target_hashes_with_Except()
+        {
+            var source = new List<Sha256> { "a", "b", "c", "c" }.ToImmutableHashSet();
+            var target = new List<Sha256> { "b", "e"}.ToImmutableHashSet();
+
+            var filesToCopy = source.Except(target);
+
+            CollectionAssert.AreEqual(new List<Sha256> { "a", "c" }.ToImmutableHashSet(), filesToCopy);
+        }
+
+
+        [TestMethod]
+        public void FilesToCopy_compares_the_Sha256_in_source_and_target_and_filters_out_distinct_files_which_are_only_in_source()
+        {
+            var sourceFileCollection = new Dictionary<AbsolutePath, (DateOnly, Sha256)>
+                {
+                    { @"C:/1.txt", (new DateOnly(), new Sha256("a")) },
+                    { @"C:/2.txt", (new DateOnly(), new Sha256("b")) },
+                    { @"C:/sub/3.jpeg", (new DateOnly(2010,7,30), new Sha256("b")) }
+                }.ToImmutableDictionary();
+            var targetFileCollection = new Dictionary<AbsolutePath, (DateOnly, Sha256)>
+                {
+                    { @"C:/1.txt", (new DateOnly(), new Sha256("a")) },
+                    { @"C:/sub/3.jpeg", (new DateOnly(2010,7,30), new Sha256("c")) }
+                }.ToImmutableDictionary();
+
+            var filesToCopyCollection = FilesToCopy(sourceFileCollection, targetFileCollection);
+
+            Assert.AreEqual(1, filesToCopyCollection.Count);
+            Assert.AreEqual(new Sha256("b"), filesToCopyCollection.First().Value.Item2);
+        }
     }
 }

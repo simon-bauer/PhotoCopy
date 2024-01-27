@@ -7,10 +7,19 @@ using System.IO;
 
 namespace PhotoCopy
 {
+    public static class FileCollectionExtensions
+    {
+        public static ImmutableHashSet<Sha256> ToSha256Set(this ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> fileCollection)
+        {
+            return fileCollection.Select(f => f.Value.Item2).ToImmutableHashSet();
+        }
+    }
+
     public readonly record struct Sha256(string Value)
     {
         public Sha256(byte[] b) : this(Convert.ToHexString(b))
         { }
+        public static implicit operator Sha256(string s) => new Sha256(s);
     }
     public static class PathHelper
     {
@@ -73,6 +82,14 @@ namespace PhotoCopy
                         (DateOnly.Parse(x[1]), new Sha256(x[2]))
                     ))
                 .ToImmutableDictionary();
+        }
+        public static ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> FilesToCopy(ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> source, ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> target)
+        {
+            var filesToCopy = source.ToSha256Set().Except(target.ToSha256Set());
+            return source.
+                Where(f => filesToCopy.Contains(f.Value.Item2)).
+                DistinctBy(f => f.Value.Item2).
+                ToImmutableDictionary();
         }
     }
 }

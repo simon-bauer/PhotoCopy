@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace PhotoCopy
 {
-    public static class Extensions
+    public static class FileSystemToolsExtensions
     {
         public static string FileHash(this SHA256 sha256, string path)
         {

@@ -54,8 +54,6 @@ namespace PhotoCopySpec
 
             CollectionAssert.AreEqual(new List<Sha256> { "a", "c" }.ToImmutableHashSet(), filesToCopy);
         }
-
-
         [TestMethod]
         public void FilesToCopy_compares_the_Sha256_in_source_and_target_and_filters_out_distinct_files_which_are_only_in_source()
         {
@@ -75,6 +73,26 @@ namespace PhotoCopySpec
 
             Assert.AreEqual(1, filesToCopyCollection.Count);
             Assert.AreEqual(new Sha256("b"), filesToCopyCollection.First().Value.Item2);
+        }
+        [TestMethod]
+        public void A_source_target_set_can_be_created_from_files_to_copy()
+        {
+            var filesToCopy = new Dictionary<AbsolutePath, (DateOnly, Sha256)>
+                {
+                    { @"C:/source/1.txt", (new DateOnly(2011,4,21), new Sha256("a")) },
+                    { @"C:/source/sub/3.jpeg", (new DateOnly(2010,7,30), new Sha256("c")) }
+                }.ToImmutableDictionary();
+            AbsolutePath targetRoot = "C:/target";
+
+            var sourceTargetSet = SourceTargetSet(filesToCopy, targetRoot);
+
+            CollectionAssert.AreEqual(
+                new HashSet<(AbsolutePath, AbsolutePath)> 
+                { 
+                    (@"C:/source/1.txt", @"C:/target/2011/4/21/1.txt"),
+                    (@"C:/source/sub/3.jpeg", @"C:/target/2010/7/30/3.jpeg")
+                }.ToImmutableHashSet(), 
+                sourceTargetSet);
         }
     }
 }

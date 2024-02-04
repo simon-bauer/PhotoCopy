@@ -91,5 +91,18 @@ namespace PhotoCopy
                 DistinctBy(f => f.Value.Item2).
                 ToImmutableDictionary();
         }
+        public static ImmutableHashSet<(AbsolutePath, AbsolutePath)> SourceTargetSet(ImmutableDictionary<AbsolutePath, (DateOnly, Sha256)> filesToCopy, AbsolutePath targetRoot)
+        {
+            return filesToCopy.Select(f => 
+                (
+                    f.Key,
+                    (AbsolutePath)Path.Combine(targetRoot, CombineDate(f.Value.Item1, "/"), Path.GetFileName(f.Key))
+                )).ToImmutableHashSet();
+        }
+
+        public static string CombineDate(DateOnly date, string delimiter)
+        {
+            return $"{date.Year}{delimiter}{date.Month}{delimiter}{date.Day}";
+        }
     }
 }
